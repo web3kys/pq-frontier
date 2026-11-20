@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ExplainerArt from '../../components/ExplainerArt.astro';
 import { ui } from '../../lib/i18n';
 
 const t = ui.zh;
@@ -12,6 +13,8 @@ const t = ui.zh;
       <h1 style="font-size: clamp(1.8rem, 4.4vw, 2.6rem)">{t.aboutTitle}</h1>
       <p class="lead">后量子前沿（Post-Quantum Frontier）是一个个人独立运营的科技知识与研究门户，长期专注于后量子密码学、量子计算与数字安全。</p>
     </div>
+  
+    <div class="page-art"><ExplainerArt kind="atom" /></div>
   </section>
 
   <div class="wrap prose" style="padding-top: 2rem">
@@ -32,6 +35,7 @@ const t = ui.zh;
       <li>引用第三方资料时标明原始来源、发布日期与参考链接，不复制第三方文章全文。</li>
       <li>文中明确区分原始事实、个人分析与研究观点；技术数据以官方标准与原始论文为准。</li>
       <li>本站不涉及虚拟货币、代币及任何金融投资内容。</li>
+      <li>本站文章由站长策划、核实与审核，撰写过程中使用 AI 辅助；文中数据均标注来源。</li>
       <li>发现错误欢迎指正；内容修订会在文章页标注更新日期。</li>
     </ul>
 

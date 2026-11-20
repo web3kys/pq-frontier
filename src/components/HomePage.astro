@@ -12,7 +12,6 @@ const all = (await getCollection('articles', ({ data }) => data.lang === lang &&
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const featured = all.filter((e) => e.data.featured);
 const featureMain = featured[0];
-const featureRest = featured.slice(1, 4);
 const latest = all.slice(0, 6);
 
 const fmtDate = (d: Date) =>
@@ -51,6 +50,9 @@ const stats =
 <BaseLayout lang={lang} title={t.siteName} current="home">
   <section class="hero hero-visual">
     <img class="hero-bg" src="/images/site/hero.jpg" alt="" fetchpriority="high" />
+    <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="/images/site/hero.jpg" aria-hidden="true">
+      <source src="/videos/hero-loop.mp4" type="video/mp4" />
+    </video>
     <canvas id="lattice-canvas" aria-hidden="true"></canvas>
     <div class="hero-shade"></div>
     <div class="wrap hero-in">
@@ -115,26 +117,43 @@ const stats =
       <h2>{t.featuredTitle}</h2>
       <span class="sec-rule" aria-hidden="true"></span>
     </div>
-    {featureMain ? (
-      <>
-        <a class="feature-card" href={`/${lang}/${featureMain.data.section}/${featureMain.id.split('/').pop()}/`}>
-          <span class="feature-tag">{lang === 'zh' ? '精选 · Featured' : 'Featured'}</span>
-          {featureMain.data.heroImage && <img src={featureMain.data.heroImage} alt="" loading="lazy" />}
-          <span class="feature-body">
-            <span class="meta">{lang === 'zh' ? sectionBySlug(featureMain.data.section).zh : sectionBySlug(featureMain.data.section).en}</span>
-            <h3>{featureMain.data.title}</h3>
-            <p>{featureMain.data.description}</p>
-            <span class="meta" style="color: var(--accent)">{t.readMore} →</span>
-          </span>
-        </a>
-        {featureRest.length > 0 && (
-          <div class="grid">
-            {featureRest.map((e) => <ArticleCard lang={lang} entry={e} />)}
-          </div>
-        )}
-      </>
-    ) : (
+    {featured.length === 0 ? (
       <p class="empty-note">{t.emptyFeatured}</p>
+    ) : featured.length === 1 ? (
+      <a class="feature-card" href={`/${lang}/${featureMain.data.section}/${featureMain.id.split('/').pop()}/`}>
+        <span class="feature-tag">{lang === 'zh' ? '精选 · Featured' : 'Featured'}</span>
+        {featureMain.data.heroImage && <img src={featureMain.data.heroImage} alt="" loading="lazy" />}
+        <span class="feature-body">
+          <span class="meta">{lang === 'zh' ? sectionBySlug(featureMain.data.section).zh : sectionBySlug(featureMain.data.section).en}</span>
+          <h3>{featureMain.data.title}</h3>
+          <p>{featureMain.data.description}</p>
+          <span class="meta" style="color: var(--accent)">{t.readMore} →</span>
+        </span>
+      </a>
+    ) : (
+      <div class="carousel" id="featured-carousel">
+        <div class="carousel-track">
+          {featured.map((e) => (
+            <a class="feature-card carousel-slide" href={`/${lang}/${e.data.section}/${e.id.split('/').pop()}/`}>
+              <span class="feature-tag">{lang === 'zh' ? '精选 · Featured' : 'Featured'}</span>
+              {e.data.heroImage && <img src={e.data.heroImage} alt="" loading="lazy" />}
+              <span class="feature-body">
+                <span class="meta">{lang === 'zh' ? sectionBySlug(e.data.section).zh : sectionBySlug(e.data.section).en}</span>
+                <h3>{e.data.title}</h3>
+                <p>{e.data.description}</p>
+                <span class="meta" style="color: var(--accent)">{t.readMore} →</span>
+              </span>
+            </a>
+          ))}
+        </div>
+        <div class="carousel-ui">
+          <button class="carousel-btn" data-dir="-1" aria-label="Previous">‹</button>
+          <div class="carousel-dots">
+            {featured.map((_, i) => <button class="carousel-dot" data-i={i} aria-label={`Slide ${i + 1}`}></button>)}
+          </div>
+          <button class="carousel-btn" data-dir="1" aria-label="Next">›</button>
+        </div>
+      </div>
     )}
   </section>
 
@@ -166,6 +185,56 @@ const stats =
   </section>
 
   <script>
+    // Hero background video: layered over the static image, under the canvas.
+    // If it can play, the canvas stands down; on save-data it is removed;
+    // under reduced-motion it merely slows (this site's motion policy).
+    (() => {
+      const video = document.querySelector('.hero-video') as HTMLVideoElement | null;
+      const cnv = document.getElementById('lattice-canvas') as HTMLCanvasElement | null;
+      if (!video) return;
+      const conn = (navigator as any).connection;
+      if (conn && conn.saveData) { video.remove(); return; }
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) video.playbackRate = 0.4;
+      video.addEventListener('canplay', () => { if (cnv) cnv.style.display = 'none'; });
+      video.addEventListener('error', () => video.remove(), true);
+    })();
+  </script>
+  <script>
+    // Featured carousel: auto-rotates, pauses on hover/focus, manual controls.
+    // Reduced-motion disables auto-rotation only; manual navigation remains.
+    (() => {
+      const root = document.getElementById('featured-carousel');
+      if (!root) return;
+      const track = root.querySelector('.carousel-track') as HTMLElement | null;
+      const slides = root.querySelectorAll('.carousel-slide');
+      const dots = root.querySelectorAll('.carousel-dot');
+      if (!track || slides.length < 2) return;
+      let idx = 0;
+      let timer: number | undefined;
+      const go = (i: number) => {
+        idx = (i + slides.length) % slides.length;
+        track.style.transform = `translateX(-${idx * 100}%)`;
+        dots.forEach((d, j) => d.classList.toggle('active', j === idx));
+      };
+      const start = () => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        stop();
+        timer = window.setInterval(() => { if (!document.hidden) go(idx + 1); }, 6500);
+      };
+      const stop = () => { if (timer) window.clearInterval(timer); };
+      root.querySelectorAll('.carousel-btn').forEach((b) => {
+        b.addEventListener('click', () => go(idx + Number((b as HTMLElement).dataset.dir || 1)));
+      });
+      dots.forEach((d, j) => d.addEventListener('click', () => go(j)));
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', start);
+      root.addEventListener('focusin', stop);
+      root.addEventListener('focusout', start);
+      go(0);
+      start();
+    })();
+  </script>
+  <script>
     // Animated lattice overlay in the hero: a drifting grid of points with
     // links between neighbours — a nod to lattice-based cryptography.
     // Reduced-motion keeps a very slow drift rather than a hard cut.
@@ -175,6 +244,7 @@ const stats =
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
       const c = ctx;
+      const cv = canvas;
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const SPEED = reduced ? 0.15 : 1;
       const GAP = 92;
@@ -186,16 +256,16 @@ const stats =
       let lastPulse = 0;
 
       function resize() {
-        const parent = canvas.parentElement;
+        const parent = cv.parentElement;
         if (!parent) return;
         const rect = parent.getBoundingClientRect();
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         w = rect.width;
         h = rect.height;
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
+        cv.width = w * dpr;
+        cv.height = h * dpr;
+        cv.style.width = w + 'px';
+        cv.style.height = h + 'px';
         c.setTransform(dpr, 0, 0, dpr, 0, 0);
         points = [];
         const cols = Math.ceil(w / GAP) + 2;

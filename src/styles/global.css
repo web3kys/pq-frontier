@@ -688,3 +688,161 @@ a.card:hover {
 .article-head h1 { font-family: var(--font-serif); }
 .prose h2, .prose h3 { font-family: var(--font-serif); }
 .prose > p:first-of-type { font-size: 1.13rem; line-height: 1.8; color: var(--text); }
+
+/* ===== v6: per-section explainers with animated SVG art ===== */
+
+.sec-theme .kicker { color: var(--sec-accent, var(--accent)); }
+.sec-theme .sec-no { color: var(--sec-accent, var(--accent-2)); }
+
+.explain {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 2.2rem;
+  align-items: center;
+  padding-top: 3rem;
+}
+.explain-art {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background:
+    radial-gradient(420px 220px at 50% 0%, color-mix(in srgb, var(--sec-accent, #38bdf8) 12%, transparent), transparent 70%),
+    var(--surface);
+  padding: 1.1rem 0.6rem 0.6rem;
+}
+.explain-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sec-accent, var(--accent));
+  margin-bottom: 0.7rem;
+}
+.explain-essence {
+  font-family: var(--font-serif);
+  font-size: clamp(1.3rem, 2.6vw, 1.65rem);
+  line-height: 1.45;
+  margin-bottom: 1.1rem;
+}
+.explain-points { list-style: none; counter-reset: ex; }
+.explain-points li {
+  counter-increment: ex;
+  position: relative;
+  padding: 0.55rem 0 0.55rem 2.4rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  line-height: 1.65;
+}
+.explain-points li::before {
+  content: counter(ex, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.62rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--sec-accent, var(--accent-2));
+}
+@media (max-width: 760px) {
+  .explain { grid-template-columns: 1fr; gap: 1.4rem; padding-top: 2.2rem; }
+}
+
+.art { color: var(--sec-accent, var(--accent)); }
+.art svg { display: block; width: 100%; height: auto; }
+.art .dim { stroke: currentColor; stroke-opacity: 0.18; stroke-width: 1; fill: none; }
+.art .node { fill: currentColor; fill-opacity: 0.55; }
+.art .keynode {
+  fill: var(--surface);
+  stroke: currentColor;
+  stroke-width: 2;
+  animation: art-breathe 3.6s ease-in-out infinite;
+}
+.art .capsule { fill: #f0c169; }
+.art .ring { fill: none; stroke: currentColor; stroke-opacity: 0.55; stroke-width: 1.4; }
+.art .dim-ring { stroke-opacity: 0.25; }
+.art .outline { fill: none; stroke: currentColor; stroke-width: 2; }
+.art .scan { fill: currentColor; fill-opacity: 0.16; animation: art-scan 5.5s ease-in-out infinite; }
+.art .lockbody { fill: currentColor; fill-opacity: 0.2; stroke: currentColor; stroke-width: 1.6; }
+.art .lockarc { fill: none; stroke: currentColor; stroke-width: 3; }
+.art .route { fill: none; stroke: currentColor; stroke-opacity: 0.4; stroke-width: 2; stroke-dasharray: 5 7; }
+.art .step-dot { fill: currentColor; animation: art-step 4.2s ease-in-out infinite; }
+.art .step-halo { fill: none; stroke: currentColor; stroke-opacity: 0.5; animation: art-step 4.2s ease-in-out infinite; }
+.art .starline { fill: none; stroke: currentColor; stroke-opacity: 0.6; stroke-width: 1.6; stroke-dasharray: 600; animation: art-dash 14s linear infinite; }
+.art .twinkle { fill: currentColor; animation: art-twinkle 3.6s ease-in-out infinite; }
+.art .wave { fill: none; stroke: currentColor; stroke-opacity: 0.7; stroke-width: 2; stroke-dasharray: 7 6; animation: art-dash 5s linear infinite; }
+.art .win { fill: none; stroke: currentColor; stroke-opacity: 0.65; stroke-width: 1.6; }
+.art .code { fill: currentColor; fill-opacity: 0.75; transform-box: fill-box; transform-origin: left center; }
+.art .code.l1 { animation: art-type 9s steps(16) infinite; }
+.art .code.l2 { animation: art-type 9s steps(22) 1.2s infinite; }
+.art .code.l3 { animation: art-type 9s steps(13) 2.6s infinite; fill: #f0c169; }
+.art .cursor { fill: currentColor; animation: art-blink 1.06s step-end infinite; }
+.art .traveller { animation: art-move-x 7s ease-in-out infinite; }
+.art .traveller-x { animation: art-move-x 10s ease-in-out infinite; }
+.art .spin-a { animation: art-spin 17s linear infinite; transform-box: fill-box; transform-origin: center; }
+.art .spin-b { animation: art-spin 26s linear infinite reverse; transform-box: fill-box; transform-origin: center; }
+.art .spin-c { animation: art-spin 38s linear infinite; transform-box: fill-box; transform-origin: center; }
+.art .spin-a-rev { animation: art-spin 17s linear infinite reverse; transform-box: fill-box; transform-origin: center; }
+
+@keyframes art-move-x {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(var(--travel, 180px)); }
+}
+@keyframes art-spin { to { transform: rotate(360deg); } }
+@keyframes art-scan { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(118px); } }
+@keyframes art-dash { to { stroke-dashoffset: -260; } }
+@keyframes art-step { 0%, 100% { opacity: 0.25; } 14%, 42% { opacity: 1; } }
+@keyframes art-type { 0% { transform: scaleX(0); } 34%, 88% { transform: scaleX(1); } 96%, 100% { transform: scaleX(0); } }
+@keyframes art-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes art-twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+@keyframes art-breathe { 0%, 100% { opacity: 0.65; } 50% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .art .spin-a, .art .spin-b, .art .spin-c, .art .spin-a-rev { animation-duration: 90s; }
+  .art .traveller, .art .traveller-x, .art .scan { animation-duration: 16s; }
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.page-art { max-width: 540px; margin-top: 1.5rem; opacity: 0.92; }
+
+/* ===== v6: featured carousel ===== */
+
+.carousel { overflow: hidden; }
+.carousel-track {
+  display: flex;
+  transition: transform 0.65s cubic-bezier(0.22, 0.9, 0.28, 1);
+}
+.carousel-slide { flex: 0 0 100%; min-width: 0; }
+.carousel-ui {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.9rem;
+}
+.carousel-btn {
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.carousel-btn:hover { border-color: var(--accent); color: var(--accent); }
+.carousel-dots { display: flex; gap: 0.5rem; }
+.carousel-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--border);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+.carousel-dot.active { width: 1.5rem; background: var(--accent); }

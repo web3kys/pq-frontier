@@ -1,0 +1,49 @@
+---
+title: "Shor 算法：量子计算如何威胁 RSA 与椭圆曲线密码"
+description: "从整数分解与离散对数为什么难讲起，解释 Shor 算法的核心思想、攻破 RSA-2048 需要多大的量子计算机，以及'先存后破'为什么让迁移必须从现在开始。"
+pubDate: 2026-11-20
+lang: zh
+section: quantum
+tags: ["Shor 算法", "RSA", "量子威胁", "先存后破"]
+heroImage: "/images/quantum/shor.jpg"
+imageCredit: "本站 AI 生成配图"
+draft: false
+translationKey: "shor-rsa-threat"
+---
+
+## 现行公钥密码的两块基石
+
+RSA 的安全性建立在**大整数分解**上：把两个大素数的乘积 $N = p \times q$ 再分解回去，以经典计算机目前已知的算法需要远超宇宙年龄的时间。椭圆曲线密码（ECC）建立在**离散对数**上：在曲线上由 $Q = dG$ 反推私钥 $d$ 同样困难。
+
+这两块基石撑起了今天几乎全部的密钥交换、数字签名与证书体系。问题在于：它们对量子计算机并不成立。
+
+## Shor 算法做了什么
+
+1994 年，Peter Shor 证明量子计算机可以在多项式时间内解决整数分解和离散对数问题。其核心思想是把分解问题转化为**求周期**问题：对随机选取的 $a$，函数 $f(x) = a^x \bmod N$ 是周期函数，用量子傅里叶变换高效求出周期 $r$ 后，就能以很高概率算出 $N$ 的非平凡因子。
+
+复杂度上，Shor 算法约为 $O((\log N)^3)$ 量级，而最好的经典算法（通用数域筛法）是亚指数级。这个差距不是"快一点"，而是"不可能变成可能"：RSA-2048 对经典计算机的壁垒，在足够大的容错量子计算机面前不复存在。椭圆曲线离散对数有对应的 Shor 变体，结论相同——而且在同等安全等级下，ECC 需要的量子资源比 RSA 还少。
+
+## 需要多大的量子计算机
+
+需要强调的是"足够大"四个字。运行 Shor 算法攻破 RSA-2048 需要的是**容错**量子计算机：Gidney 与 Ekerå 2019 年的著名估算认为，需要约 2000 万个带噪声的物理量子比特、运行约 8 小时（在特定的表面码纠错与误差率假设下）。
+
+今天的量子计算机处于约千个物理量子比特、尚无大规模容错能力的阶段，离这个门槛还有数量级的差距。没有人能确切预言门槛在哪一年被跨过——这正是问题的关键所在：**迁移决策不能建立在一个没人能保证的时间表上。**
+
+## 真正紧迫的是"先存后破"
+
+即使量子计算机还要十年才到，威胁也已经开始计时。攻击者今天就可以把截获的加密流量**先存下来**（Harvest Now），等量子计算机成熟后**再解密**（Decrypt Later）。只要你的数据保密期长于"量子计算机到来的时间"，它今天就已经不安全了。
+
+这可以用 Mosca 不等式直观表达：设数据需要保密 $X$ 年、系统迁移需要 $Y$ 年、大规模量子计算机 $Z$ 年后出现——如果 $X + Y > Z$，你已经晚了。医疗记录、国家机密、长期合同这类数据的 $X$ 动辄以十年计，而大型系统的 $Y$ 同样以年计。结论很直接：**迁移的紧迫性不取决于量子计算机何时到来，而取决于你的数据要保密多久。**
+
+## 小结
+
+- Shor 算法在理论上终结了 RSA 与 ECC 的安全性，这不是猜测而是数学结论；
+- 缺的只是足够大的容错量子计算机，时间表无人能保证；
+- "先存后破"让长保密期数据今天就面临风险；
+- 因此后量子迁移（从 [ML-KEM](../pqc/ml-kem-fips-203/) 开始）是一项现在就要排期的工程，而不是未来的话题。
+
+## 参考资料
+
+1. Shor, P. W., *Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer*, SIAM Journal on Computing, 1997. https://arxiv.org/abs/quant-ph/9508027
+2. Gidney, C., Ekerå, M., *How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits*, Quantum 5, 433 (2021). https://arxiv.org/abs/1905.09749
+3. Mosca, M., *Cybersecurity in an era with quantum computers: will we be ready?*, IEEE Security & Privacy, 2018.
