@@ -15,6 +15,9 @@ const featureMain = featured[0];
 const featureRest = featured.slice(1, 4);
 const latest = all.slice(0, 6);
 
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+
 const glyphs: Record<string, string> = {
   pqc: '⬡',
   quantum: '◉',
@@ -63,6 +66,10 @@ const stats =
           </div>
         ))}
       </div>
+      <div class="hero-meta" aria-hidden="true">
+        <span>POST-QUANTUM CRYPTOGRAPHY — QUANTUM COMPUTING — DIGITAL SECURITY</span>
+        <span class="hero-meta-r">{t.scrollHint} ↓</span>
+      </div>
     </div>
   </section>
 
@@ -74,25 +81,44 @@ const stats =
     </div>
   </div>
 
+  <section class="manifesto wrap reveal">
+    <p class="manifesto-kicker">{t.manifestoKicker} · Manifesto</p>
+    <p class="manifesto-text">{t.manifesto}</p>
+    <p class="manifesto-sub">{t.manifestoSub}</p>
+  </section>
+
   <section class="block wrap reveal">
-    <h2>{t.areasTitle}</h2>
+    <div class="sec-head">
+      <span class="sec-no">01</span>
+      <h2>{t.areasTitle}</h2>
+      <span class="sec-rule" aria-hidden="true"></span>
+    </div>
     <p class="block-lead">{t.areasLead}</p>
-    <div class="grid">
-      {SECTIONS.map((s) => (
-        <a class="card" href={`/${lang}/${s.slug}/`}>
-          <span class="glyph" aria-hidden="true">{glyphs[s.slug]}</span>
-          <h3>{lang === 'zh' ? s.zh : s.en}</h3>
-          <p>{lang === 'zh' ? s.zhDesc : s.enDesc}</p>
+    <div class="index-list">
+      {SECTIONS.map((s, i) => (
+        <a class="index-row" href={`/${lang}/${s.slug}/`}>
+          <span class="index-no">{String(i + 1).padStart(2, '0')}</span>
+          <span class="index-glyph" aria-hidden="true">{glyphs[s.slug]}</span>
+          <span class="index-main">
+            <span class="index-title">{lang === 'zh' ? s.zh : s.en}</span>
+            <span class="index-desc">{lang === 'zh' ? s.zhDesc : s.enDesc}</span>
+          </span>
+          <span class="index-arrow" aria-hidden="true">→</span>
         </a>
       ))}
     </div>
   </section>
 
   <section class="block wrap reveal">
-    <h2>{t.featuredTitle}</h2>
+    <div class="sec-head">
+      <span class="sec-no">02</span>
+      <h2>{t.featuredTitle}</h2>
+      <span class="sec-rule" aria-hidden="true"></span>
+    </div>
     {featureMain ? (
       <>
         <a class="feature-card" href={`/${lang}/${featureMain.data.section}/${featureMain.id.split('/').pop()}/`}>
+          <span class="feature-tag">{lang === 'zh' ? '精选 · Featured' : 'Featured'}</span>
           {featureMain.data.heroImage && <img src={featureMain.data.heroImage} alt="" loading="lazy" />}
           <span class="feature-body">
             <span class="meta">{lang === 'zh' ? sectionBySlug(featureMain.data.section).zh : sectionBySlug(featureMain.data.section).en}</span>
@@ -113,10 +139,26 @@ const stats =
   </section>
 
   <section class="block wrap reveal">
-    <h2>{t.latestTitle}</h2>
+    <div class="sec-head">
+      <span class="sec-no">03</span>
+      <h2>{t.latestTitle}</h2>
+      <span class="sec-rule" aria-hidden="true"></span>
+    </div>
     {latest.length > 0 ? (
-      <div class="grid">
-        {latest.map((e) => <ArticleCard lang={lang} entry={e} />)}
+      <div class="ed-list">
+        {latest.map((e) => (
+          <a class="ed-row" href={`/${lang}/${e.data.section}/${e.id.split('/').pop()}/`}>
+            <span class="ed-date">{fmtDate(e.data.pubDate)}</span>
+            <span class="ed-main">
+              <span class="ed-title">{e.data.title}</span>
+              <span class="ed-desc">{e.data.description}</span>
+            </span>
+            <span class="ed-side">
+              <span class="ed-sec">{lang === 'zh' ? sectionBySlug(e.data.section).zh : sectionBySlug(e.data.section).en}</span>
+              <span class="ed-arrow" aria-hidden="true">→</span>
+            </span>
+          </a>
+        ))}
       </div>
     ) : (
       <p class="empty-note">{t.emptyLatest}</p>
