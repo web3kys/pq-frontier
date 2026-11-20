@@ -27,6 +27,23 @@
     "Liberation Mono", monospace;
 }
 
+/* Light theme (Phase 3): same system, light surfaces. */
+[data-theme="light"] {
+  --bg: #f4f7fb;
+  --bg-raise: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #eef4fc;
+  --line: #c3d2e6;
+  --line-soft: #d9e4f2;
+  --text: #0c1a2e;
+  --text-dim: #3d5570;
+  --text-faint: #6d84a0;
+  --accent: #0369a1;
+  --accent-strong: #2563eb;
+  --accent-soft: rgba(3, 105, 161, 0.09);
+  --gold: #9a6b1f;
+}
+
 * { box-sizing: border-box; }
 
 html {
@@ -262,6 +279,91 @@ a.card:hover {
 }
 .footer-in { padding: 2rem 0 2.4rem; display: grid; gap: 0.4rem; }
 .footer-in .f-brand { color: var(--text-dim); font-weight: 600; }
+
+/* ---------- code highlighting (Shiki dual theme) ---------- */
+.astro-code, .astro-code span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+.astro-code { background-color: #0a1526 !important; }
+[data-theme="light"] .astro-code, [data-theme="light"] .astro-code span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+[data-theme="light"] .astro-code { background-color: #f6f8fa !important; }
+
+/* ---------- theme toggle ---------- */
+.theme-toggle {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+.theme-toggle:hover { color: var(--text); border-color: var(--accent-strong); }
+
+/* ---------- reading progress ---------- */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--accent-strong), var(--accent));
+  z-index: 60;
+}
+
+/* ---------- article table of contents ---------- */
+.toc {
+  max-width: 780px;
+  margin: 1.8rem auto 0;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  background: var(--bg-raise);
+  padding: 1rem 1.3rem;
+}
+.toc h2 { font-size: 0.95rem; margin: 0 0 0.6rem; color: var(--text-dim); letter-spacing: 0.06em; }
+.toc ol { margin: 0; padding-left: 1.2rem; }
+.toc li { margin: 0.3rem 0; font-size: 0.94rem; }
+.toc li.d3 { margin-left: 1.1rem; list-style: none; font-size: 0.9rem; }
+.toc a { color: var(--text-dim); }
+.toc a:hover { color: var(--accent); }
+
+/* ---------- search (Pagefind UI) ---------- */
+.search-box { padding: 2.4rem 0 1rem; max-width: 780px; }
+.pagefind-ui {
+  --pagefind-ui-primary: var(--accent-strong);
+  --pagefind-ui-text: var(--text);
+  --pagefind-ui-background: var(--bg-card);
+  --pagefind-ui-border: var(--line);
+  --pagefind-ui-tag: var(--accent-soft);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: var(--radius);
+  --pagefind-ui-font: var(--font-sans);
+}
+
+/* ---------- 404 ---------- */
+.notfound { text-align: center; padding: 5rem 0 4rem; }
+.notfound .code {
+  font-family: var(--font-mono);
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  color: var(--accent-strong);
+  margin: 0;
+}
+.notfound p { color: var(--text-dim); }
 
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {

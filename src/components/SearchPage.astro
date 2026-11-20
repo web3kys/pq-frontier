@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ui, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<BaseLayout lang={lang} title={t.searchTitle} description={t.searchLead} current="search">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <p class="kicker">{t.siteName} · Search</p>
+      <h1 style="font-size: clamp(1.8rem, 4.4vw, 2.6rem)">{t.searchTitle}</h1>
+      <p class="lead">{t.searchLead}</p>
+    </div>
+  </section>
+
+  <div class="wrap search-box">
+    <div id="search"></div>
+  </div>
+
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline define:vars={{ lang }}>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (typeof PagefindUI !== 'undefined') {
+        new PagefindUI({
+          element: '#search',
+          showSubResults: true,
+          showImages: false,
+          translations: lang === 'zh'
+            ? { placeholder: '输入关键词搜索…', zero_results: '没有找到相关内容', clear_search: '清除' }
+            : {},
+        });
+      }
+    });
+  </script>
+</BaseLayout>

@@ -1,5 +1,5 @@
 ---
-import { render, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { sectionBySlug, ui, type Lang } from '../lib/i18n';
 
@@ -7,7 +7,7 @@ interface Props { lang: Lang; entry: CollectionEntry<'articles'> }
 const { lang, entry } = Astro.props;
 const t = ui[lang];
 const d = entry.data;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 const dateFmt = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-GB', {
   year: 'numeric',
   month: 'long',
@@ -16,12 +16,52 @@ const dateFmt = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-GB', {
 const chars = (entry.body ?? '').replace(/\s+/g, '').length;
 const minutes = Math.max(1, Math.round(chars / (lang === 'zh' ? 450 : 1100)));
 const sectionName = lang === 'zh' ? sectionBySlug(d.section).zh : sectionBySlug(d.section).en;
+const slug = entry.id.split('/').pop();
+const selfPath = `/${lang}/${d.section}/${slug}/`;
+
+// hreflang pairing: only link the other language if a real translation
+// with the same translationKey exists. Never fake a missing translation.
+const other: Lang = lang === 'zh' ? 'en' : 'zh';
+let otherPath: string | undefined;
+if (d.translationKey) {
+  const pair = (await getCollection('articles', ({ data }) =>
+    data.lang === other && data.translationKey === d.translationKey && !data.draft,
+  ))[0];
+  if (pair) {
+    otherPath = `/${other}/${pair.data.section}/${pair.id.split('/').pop()}/`;
+  }
+}
+const alternates = {
+  [lang]: selfPath,
+  ...(otherPath ? { [other]: otherPath } : {}),
+} as { zh?: string; en?: string };
+
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: d.title,
+  description: d.description,
+  datePublished: d.pubDate.toISOString(),
+  ...(d.updatedDate ? { dateModified: d.updatedDate.toISOString() } : {}),
+  author: { '@type': 'Person', name: d.author },
+  inLanguage: lang === 'zh' ? 'zh-CN' : 'en',
+};
 ---
 
-<BaseLayout lang={lang} title={d.title} description={d.description} current={d.section}>
+<BaseLayout
+  lang={lang}
+  title={d.title}
+  description={d.description}
+  current={d.section}
+  alternates={alternates}
+  ogType="article"
+  jsonLd={jsonLd}
+>
+  <div class="reading-progress" id="reading-progress"></div>
   <article>
     <div class="wrap article-head">
-      <p class="kicker" style="font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent)">
+      <p style="font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent)">
         <a href={`/${lang}/${d.section}/`}>← {t.backToSection} · {sectionName}</a>
       </p>
       <h1>{d.title}</h1>
@@ -41,6 +81,22 @@ const sectionName = lang === 'zh' ? sectionBySlug(d.section).zh : sectionBySlug(
         </figure>
       )}
     </div>
+
+    {toc.length >= 3 && (
+      <div class="wrap">
+        <nav class="toc" aria-label={t.tocTitle}>
+          <h2>{t.tocTitle}</h2>
+          <ol>
+            {toc.map((h) => (
+              <li class={h.depth === 3 ? 'd3' : undefined}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </div>
+    )}
+
     <div class="wrap prose">
       <Content />
       {d.tags.length > 0 && (
@@ -51,4 +107,19 @@ const sectionName = lang === 'zh' ? sectionBySlug(d.section).zh : sectionBySlug(
       )}
     </div>
   </article>
+
+  <script is:inline>
+    (function () {
+      var bar = document.getElementById('reading-progress');
+      if (!bar) return;
+      function update() {
+        var h = document.documentElement;
+        var max = h.scrollHeight - h.clientHeight;
+        var p = max > 0 ? Math.min(1, Math.max(0, h.scrollTop / max)) : 0;
+        bar.style.transform = 'scaleX(' + p + ')';
+      }
+      document.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
 </BaseLayout>
