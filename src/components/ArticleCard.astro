@@ -11,6 +11,7 @@ interface Props {
       pubDate: Date;
       section: string;
       tags: string[];
+      heroImage?: string;
     };
   };
 }
@@ -28,6 +29,7 @@ const dateFmt = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-GB', {
 ---
 
 <a class="card" href={href}>
+  {d.heroImage && <img class="card-img" src={d.heroImage} alt="" loading="lazy" />}
   <span class="meta">
     <span>{dateFmt.format(d.pubDate)}</span>
     <span>{lang === 'zh' ? sectionBySlug(d.section).zh : sectionBySlug(d.section).en}</span>
