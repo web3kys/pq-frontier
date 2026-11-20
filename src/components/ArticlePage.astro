@@ -1,0 +1,54 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { sectionBySlug, ui, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang; entry: CollectionEntry<'articles'> }
+const { lang, entry } = Astro.props;
+const t = ui[lang];
+const d = entry.data;
+const { Content } = await render(entry);
+const dateFmt = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-GB', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const chars = (entry.body ?? '').replace(/\s+/g, '').length;
+const minutes = Math.max(1, Math.round(chars / (lang === 'zh' ? 450 : 1100)));
+const sectionName = lang === 'zh' ? sectionBySlug(d.section).zh : sectionBySlug(d.section).en;
+---
+
+<BaseLayout lang={lang} title={d.title} description={d.description} current={d.section}>
+  <article>
+    <div class="wrap article-head">
+      <p class="kicker" style="font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent)">
+        <a href={`/${lang}/${d.section}/`}>← {t.backToSection} · {sectionName}</a>
+      </p>
+      <h1>{d.title}</h1>
+      <p class="desc">{d.description}</p>
+      <p class="meta">
+        <span>{t.publishedOn} {dateFmt.format(d.pubDate)}</span>
+        {d.updatedDate && <span>{t.updatedOn} {dateFmt.format(d.updatedDate)}</span>}
+        <span>· {minutes} {t.minutesRead}</span>
+        <span>· {d.author}</span>
+      </p>
+      {d.heroImage && (
+        <figure style="margin: 1.6rem 0 0">
+          <img src={d.heroImage} alt={d.title} style="border-radius: var(--radius); border: 1px solid var(--line-soft)" />
+          {d.imageCredit && (
+            <figcaption style="color: var(--text-faint); font-size: 0.82rem; margin-top: 0.45rem">{d.imageCredit}</figcaption>
+          )}
+        </figure>
+      )}
+    </div>
+    <div class="wrap prose">
+      <Content />
+      {d.tags.length > 0 && (
+        <p style="margin-top: 2.2rem">
+          <span style="color: var(--text-faint); margin-right: 0.5rem">{t.tagsLabel}:</span>
+          {d.tags.map((tag) => <span class="tag">{tag}</span>)}
+        </p>
+      )}
+    </div>
+  </article>
+</BaseLayout>

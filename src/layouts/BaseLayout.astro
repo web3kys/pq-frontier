@@ -1,0 +1,74 @@
+---
+import '../styles/global.css';
+import { SECTIONS, ui, counterpartPath, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description?: string;
+  /** nav slug to highlight: a section slug, 'resources', 'about', or 'home' */
+  current?: string;
+}
+
+const { lang, title, description, current = '' } = Astro.props;
+const t = ui[lang];
+const pathname = Astro.url.pathname;
+const other: Lang = lang === 'zh' ? 'en' : 'zh';
+const switchHref = counterpartPath(pathname, other);
+const fullTitle = title === t.siteName ? title : `${title} · ${t.siteName}`;
+const desc = description ?? t.heroLead;
+const htmlLang = lang === 'zh' ? 'zh-CN' : 'en';
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap header-in">
+        <a class="brand" href={`/${lang}/`}>
+          <img src="/favicon.svg" alt="" width="30" height="30" />
+          <span>
+            {t.siteName}
+            <span class="brand-sub">{t.siteNameEn}</span>
+          </span>
+        </a>
+        <nav class="main-nav" aria-label="Primary">
+          <a href={`/${lang}/`} aria-current={current === 'home' ? 'page' : undefined}>{t.navHome}</a>
+          {SECTIONS.map((s) => (
+            <a
+              href={`/${lang}/${s.slug}/`}
+              aria-current={current === s.slug ? 'page' : undefined}
+            >
+              {lang === 'zh' ? s.zh : s.en}
+            </a>
+          ))}
+          <a href={`/${lang}/resources/`} aria-current={current === 'resources' ? 'page' : undefined}>{t.navResources}</a>
+          <a href={`/${lang}/about/`} aria-current={current === 'about' ? 'page' : undefined}>{t.navAbout}</a>
+        </nav>
+        <a class="lang-switch" href={switchHref} aria-label={t.langSwitchLabel} hreflang={other}>
+          {t.langSwitch}
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-in">
+        <span class="f-brand">{t.siteName} · {t.siteNameEn}</span>
+        <span>{t.footerNote}</span>
+        <span>© {new Date().getFullYear()} PQ Frontier. {t.footerRights}.</span>
+      </div>
+    </footer>
+  </body>
+</html>

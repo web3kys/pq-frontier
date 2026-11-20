@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from './ArticleCard.astro';
+import { SECTIONS, ui, type Lang } from '../lib/i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+
+const all = (await getCollection('articles', ({ data }) => data.lang === lang && !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const featured = all.filter((e) => e.data.featured).slice(0, 3);
+const latest = all.slice(0, 6);
+
+const glyphs: Record<string, string> = {
+  pqc: '⬡',
+  quantum: '◉',
+  security: '⛨',
+  migration: '⇪',
+  research: '✦',
+  tutorials: '⌘',
+};
+---
+
+<BaseLayout lang={lang} title={t.siteName} current="home">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <p class="kicker">PQ Frontier · {lang === 'zh' ? '后量子前沿' : 'Post-Quantum Frontier'}</p>
+      <h1>{t.siteName}</h1>
+      <p class="tagline">{t.tagline}</p>
+      <p class="lead">{t.heroLead}</p>
+    </div>
+  </section>
+
+  <section class="block wrap">
+    <h2>{t.areasTitle}</h2>
+    <p class="block-lead">{t.areasLead}</p>
+    <div class="grid">
+      {SECTIONS.map((s) => (
+        <a class="card" href={`/${lang}/${s.slug}/`}>
+          <span class="glyph" aria-hidden="true">{glyphs[s.slug]}</span>
+          <h3>{lang === 'zh' ? s.zh : s.en}</h3>
+          <p>{lang === 'zh' ? s.zhDesc : s.enDesc}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="block wrap">
+    <h2>{t.featuredTitle}</h2>
+    {featured.length > 0 ? (
+      <div class="grid">
+        {featured.map((e) => <ArticleCard lang={lang} entry={e} />)}
+      </div>
+    ) : (
+      <p class="empty-note">{t.emptyFeatured}</p>
+    )}
+  </section>
+
+  <section class="block wrap">
+    <h2>{t.latestTitle}</h2>
+    {latest.length > 0 ? (
+      <div class="grid">
+        {latest.map((e) => <ArticleCard lang={lang} entry={e} />)}
+      </div>
+    ) : (
+      <p class="empty-note">{t.emptyLatest}</p>
+    )}
+  </section>
+</BaseLayout>

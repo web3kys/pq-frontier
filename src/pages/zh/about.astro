@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ui } from '../../lib/i18n';
+
+const t = ui.zh;
+---
+
+<BaseLayout lang="zh" title={t.aboutTitle} current="about">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <p class="kicker">{t.siteName} · About</p>
+      <h1 style="font-size: clamp(1.8rem, 4.4vw, 2.6rem)">{t.aboutTitle}</h1>
+      <p class="lead">后量子前沿（Post-Quantum Frontier）是一个个人独立运营的科技知识与研究门户，长期专注于后量子密码学、量子计算与数字安全。</p>
+    </div>
+  </section>
+
+  <div class="wrap prose" style="padding-top: 2rem">
+    <h2>建站目的</h2>
+    <p>大规模量子计算机一旦成熟，今天广泛使用的公钥密码体系（RSA、椭圆曲线密码等）将不再安全。从现行标准迁移到后量子密码，是一场需要提前十年布局的系统工程。本站的目的，是把这场迁移所需的知识——算法、标准、评估方法与实施路线——以原创研究和技术教程的形式系统地记录下来，供有需要的工程师、研究者和学习者参考。</p>
+
+    <h2>研究方向</h2>
+    <ul>
+      <li>后量子密码学算法与 NIST 标准（ML-KEM、ML-DSA、SLH-DSA 等）</li>
+      <li>量子计算原理、量子芯片、量子纠错与量子算法</li>
+      <li>数字安全：数据加密、数字签名、身份认证与密钥管理</li>
+      <li>后量子迁移：密码系统盘点、安全评估、迁移路线与实施指南</li>
+    </ul>
+
+    <h2>内容规范</h2>
+    <ul>
+      <li>本站只发布原创文章、技术教程、论文解读与研究报告，不做新闻采编与转载，不设评论与互动功能。</li>
+      <li>引用第三方资料时标明原始来源、发布日期与参考链接，不复制第三方文章全文。</li>
+      <li>文中明确区分原始事实、个人分析与研究观点；技术数据以官方标准与原始论文为准。</li>
+      <li>本站不涉及虚拟货币、代币及任何金融投资内容。</li>
+      <li>发现错误欢迎指正；内容修订会在文章页标注更新日期。</li>
+    </ul>
+
+    <h2>版权声明</h2>
+    <p>本站原创内容的版权归本站所有者所有。引用与转载请注明出处与链接；第三方资料的权利归其原始权利人所有。</p>
+
+    <h2>联系方式</h2>
+    <p>通过本站的 GitHub 仓库（web3kys/pq-frontier）的 Issues 联系。</p>
+  </div>
+</BaseLayout>

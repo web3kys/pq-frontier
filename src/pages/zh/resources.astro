@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ui } from '../../lib/i18n';
+
+const t = ui.zh;
+
+const groups = [
+  {
+    title: '官方标准与权威机构',
+    items: [
+      {
+        name: 'NIST 后量子密码标准化项目',
+        url: 'https://csrc.nist.gov/projects/post-quantum-cryptography',
+        note: '美国国家标准与技术研究院（NIST）PQC 标准化的官方页面：标准全文、评选过程与实施指南。',
+      },
+      {
+        name: 'FIPS 203 · ML-KEM',
+        url: 'https://doi.org/10.6028/NIST.FIPS.203',
+        note: '基于模格的密钥封装机制标准，2024 年 8 月发布。',
+      },
+      {
+        name: 'FIPS 204 · ML-DSA',
+        url: 'https://doi.org/10.6028/NIST.FIPS.204',
+        note: '基于模格的数字签名标准，2024 年 8 月发布。',
+      },
+      {
+        name: 'FIPS 205 · SLH-DSA',
+        url: 'https://doi.org/10.6028/NIST.FIPS.205',
+        note: '基于无状态哈希的数字签名标准，2024 年 8 月发布。',
+      },
+      {
+        name: 'IETF Datatracker',
+        url: 'https://datatracker.ietf.org',
+        note: '互联网工程任务组文档库：TLS、LAMPS 等工作组的后量子协议草案与 RFC。',
+      },
+      {
+        name: 'ETSI 量子安全密码',
+        url: 'https://www.etsi.org/technologies/quantum-safe-cryptography',
+        note: '欧洲电信标准化协会的量子安全密码技术页面与报告。',
+      },
+    ],
+  },
+  {
+    title: '开源实现',
+    items: [
+      {
+        name: 'Open Quantum Safe（liboqs）',
+        url: 'https://openquantumsafe.org',
+        note: '后量子算法的开源 C 库与协议集成项目，用于实验与原型验证。',
+      },
+      {
+        name: 'PQClean',
+        url: 'https://github.com/PQClean/PQClean',
+        note: '面向可读性与可审计性的后量子方案干净实现集合。',
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout lang="zh" title={t.resourcesTitle} description={t.resourcesLead} current="resources">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <p class="kicker">{t.siteName} · Resources</p>
+      <h1 style="font-size: clamp(1.8rem, 4.4vw, 2.6rem)">{t.resourcesTitle}</h1>
+      <p class="lead">{t.resourcesLead}</p>
+    </div>
+  </section>
+
+  {groups.map((g) => (
+    <section class="block wrap">
+      <h2>{g.title}</h2>
+      <div class="grid">
+        {g.items.map((item) => (
+          <a class="card" href={item.url} target="_blank" rel="noopener noreferrer">
+            <h3>{item.name}</h3>
+            <p>{item.note}</p>
+            <span class="meta" style="margin-top: 0.6rem; color: var(--accent)">{new URL(item.url).hostname} ↗</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</BaseLayout>

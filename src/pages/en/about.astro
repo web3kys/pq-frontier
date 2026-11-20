@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ui } from '../../lib/i18n';
+
+const t = ui.en;
+---
+
+<BaseLayout lang="en" title={t.aboutTitle} current="about">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <p class="kicker">{t.siteName} · About</p>
+      <h1 style="font-size: clamp(1.8rem, 4.4vw, 2.6rem)">{t.aboutTitle}</h1>
+      <p class="lead">Post-Quantum Frontier is an independently run portal for technology knowledge and research, focused on post-quantum cryptography, quantum computing and digital security.</p>
+    </div>
+  </section>
+
+  <div class="wrap prose" style="padding-top: 2rem">
+    <h2>Purpose</h2>
+    <p>Once large-scale quantum computers mature, the public-key cryptography in wide use today — RSA, elliptic-curve cryptography and their relatives — will no longer be safe. Migrating from current standards to post-quantum cryptography is a systems project that must start a decade ahead. This site exists to record the knowledge that migration requires — algorithms, standards, assessment methods and implementation roadmaps — as original research and tutorials for engineers, researchers and learners.</p>
+
+    <h2>Research Directions</h2>
+    <ul>
+      <li>Post-quantum algorithms and the NIST standards (ML-KEM, ML-DSA, SLH-DSA, …)</li>
+      <li>Quantum computing principles, quantum chips, error correction and algorithms</li>
+      <li>Digital security: data encryption, digital signatures, identity authentication and key management</li>
+      <li>Post-quantum migration: cryptographic inventory, security assessment, roadmaps and implementation guides</li>
+    </ul>
+
+    <h2>Content Standards</h2>
+    <ul>
+      <li>This site publishes only original articles, tutorials, paper reviews and research reports. It is not a news service, carries no syndicated content, and has no comments or interactive features.</li>
+      <li>Third-party material is cited with its original source, publication date and reference link; full texts are never copied.</li>
+      <li>Original facts, personal analysis and research opinions are clearly distinguished; technical data follows official standards and primary papers.</li>
+      <li>This site carries no content about virtual currencies, tokens or financial investment.</li>
+      <li>Corrections are welcome; revisions are marked with an updated date on the article page.</li>
+    </ul>
+
+    <h2>Copyright</h2>
+    <p>Original content on this site belongs to its owner. Please credit the source and link back when quoting; third-party material remains the property of its original rights holders.</p>
+
+    <h2>Contact</h2>
+    <p>Via the Issues of this site's GitHub repository (web3kys/pq-frontier).</p>
+  </div>
+</BaseLayout>

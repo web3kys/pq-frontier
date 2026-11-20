@@ -1,0 +1,43 @@
+---
+import { sectionBySlug, ui, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  entry: {
+    id: string;
+    data: {
+      title: string;
+      description: string;
+      pubDate: Date;
+      section: string;
+      tags: string[];
+    };
+  };
+}
+
+const { lang, entry } = Astro.props;
+const t = ui[lang];
+const d = entry.data;
+const slug = entry.id.split('/').pop();
+const href = `/${lang}/${d.section}/${slug}/`;
+const dateFmt = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-GB', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<a class="card" href={href}>
+  <span class="meta">
+    <span>{dateFmt.format(d.pubDate)}</span>
+    <span>{lang === 'zh' ? sectionBySlug(d.section).zh : sectionBySlug(d.section).en}</span>
+  </span>
+  <h3>{d.title}</h3>
+  <p>{d.description}</p>
+  {d.tags.length > 0 && (
+    <p style="margin-top:0.7rem">
+      {d.tags.map((tag) => <span class="tag">{tag}</span>)}
+    </p>
+  )}
+  <span class="meta" style="margin-top:0.6rem; color: var(--accent)">{t.readMore} →</span>
+</a>

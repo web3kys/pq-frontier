@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import ArticlePage from '../../../components/ArticlePage.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('articles', ({ data }) => data.lang === 'en');
+  return entries.map((entry) => {
+    const parts = entry.id.split('/');
+    return {
+      params: { section: parts[1], slug: parts[2] },
+      props: { entry },
+    };
+  });
+}
+
+const { entry } = Astro.props;
+---
+
+<ArticlePage lang="en" entry={entry} />
