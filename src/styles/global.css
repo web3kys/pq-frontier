@@ -674,3 +674,17 @@ a.card:hover {
   .ed-side { grid-area: 1 / 2 / 3 / 3; }
   .hero-meta span:first-child { display: none; }
 }
+
+/* ===== v5: editorial system across the whole site ===== */
+
+.hero-banner h1 { font-family: var(--font-serif); }
+.hero:not(.hero-visual) h1 { font-family: var(--font-serif); }
+.block > h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  line-height: 1.3;
+}
+.card h3 { font-family: var(--font-serif); font-size: 1.16rem; }
+.article-head h1 { font-family: var(--font-serif); }
+.prose h2, .prose h3 { font-family: var(--font-serif); }
+.prose > p:first-of-type { font-size: 1.13rem; line-height: 1.8; color: var(--text); }

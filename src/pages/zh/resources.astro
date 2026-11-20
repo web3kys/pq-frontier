@@ -97,9 +97,13 @@ const groups = [
     </div>
   </section>
 
-  {groups.map((g) => (
+  {groups.map((g, gi) => (
     <section class="block wrap">
-      <h2>{g.title}</h2>
+      <div class="sec-head">
+        <span class="sec-no">{String(gi + 1).padStart(2, '0')}</span>
+        <h2>{g.title}</h2>
+        <span class="sec-rule" aria-hidden="true"></span>
+      </div>
       <div class="grid">
         {g.items.map((item) => (
           <a class="card" href={item.url} target="_blank" rel="noopener noreferrer">
