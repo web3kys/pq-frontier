@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import ArticlePage from '../../../components/ArticlePage.astro';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('articles', ({ data }) => data.lang === 'zh');
+  const entries = await getCollection('articles', ({ data }) => data.lang === 'zh' && !data.draft);
   return entries.map((entry) => {
     const parts = entry.id.split('/');
     return {
