@@ -73,6 +73,7 @@ const altEn = alternates?.en ?? (lang === 'en' ? pathname : counterpartPath(path
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
+    <div class="bg-fx" aria-hidden="true"></div>
     <header class="site-header">
       <div class="wrap header-in">
         <a class="brand" href={`/${lang}/`}>

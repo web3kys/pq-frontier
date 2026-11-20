@@ -9,6 +9,7 @@
   --bg-card-hover: #0d1b33;
   --line: #1c2f4d;
   --line-soft: #132239;
+  --grid-line: rgba(125, 180, 255, 0.05);
   --text: #e8eef7;
   --text-dim: #9db1c9;
   --text-faint: #647d9c;
@@ -35,6 +36,7 @@
   --bg-card-hover: #eef4fc;
   --line: #c3d2e6;
   --line-soft: #d9e4f2;
+  --grid-line: rgba(15, 60, 120, 0.055);
   --text: #0c1a2e;
   --text-dim: #3d5570;
   --text-faint: #6d84a0;
@@ -498,4 +500,36 @@ a.card:hover {
 @media (prefers-reduced-motion: reduce) {
   .ticker-track { animation-duration: 140s; }
   .reveal { transition-duration: 0.15s; transform: none; }
+}
+
+/* ===== Design system v3: ambient background, section banners, motion ===== */
+
+.bg-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(900px 480px at 85% -5%, rgba(37, 99, 235, 0.1), transparent 60%),
+    radial-gradient(700px 420px at 0% 100%, rgba(56, 189, 248, 0.06), transparent 60%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: auto, auto, 44px 44px, 44px 44px;
+}
+.site-header, main, .site-footer { position: relative; z-index: 1; }
+
+.hero-banner .hero-in { padding: 3.6rem 0 2.8rem; }
+.hero-banner { min-height: 240px; }
+
+.brand img { animation: brand-spin 26s linear infinite; }
+@keyframes brand-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.feature-card { box-shadow: 0 0 0 rgba(56, 189, 248, 0); }
+.feature-card:hover { box-shadow: 0 16px 44px -14px rgba(56, 189, 248, 0.4); }
+
+@media (prefers-reduced-motion: reduce) {
+  .brand img { animation-duration: 90s; }
 }
