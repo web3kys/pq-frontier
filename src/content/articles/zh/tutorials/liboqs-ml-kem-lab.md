@@ -9,6 +9,10 @@ heroImage: "/images/tutorials/liboqs.jpg"
 imageCredit: "本站 AI 生成配图"
 draft: false
 translationKey: "liboqs-ml-kem-lab"
+keyPoints:
+  - "liboqs 的 oqs.KEM 接口用数行代码即可完成 ML-KEM 密钥交换全流程。"
+  - "实验要点：核对三档参数的公钥与密文尺寸，并验证篡改密文后解封装给出不同秘密（隐式拒绝）。"
+  - "liboqs 是研究与原型库，生产环境请使用受维护的实现。"
 ---
 
 ## 实验目标

@@ -9,6 +9,10 @@ heroImage: "/images/quantum/shor.jpg"
 imageCredit: "AI-generated artwork created for PQ Frontier"
 draft: false
 translationKey: "shor-rsa-threat"
+keyPoints:
+  - "Shor's algorithm solves integer factorization and discrete logarithms in polynomial time — neither RSA nor ECC survives a sufficiently large fault-tolerant quantum computer."
+  - "Breaking RSA-2048 takes on the order of thousands of logical qubits and tens of millions of physical qubits (surface code, 10^-3 physical error rate)."
+  - "The timeline is set by error-correction progress; harvest-now-decrypt-later puts long-shelf-life data at risk today."
 ---
 
 ## The two pillars of current public-key cryptography

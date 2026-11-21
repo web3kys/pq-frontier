@@ -84,7 +84,6 @@ const altEn = alternates?.en ?? (lang === 'en' ? pathname : counterpartPath(path
           </span>
         </a>
         <nav class="main-nav" aria-label="Primary">
-          <a href={`/${lang}/`} aria-current={current === 'home' ? 'page' : undefined}>{t.navHome}</a>
           {SECTIONS.map((s) => (
             <a
               href={`/${lang}/${s.slug}/`}
@@ -94,6 +93,8 @@ const altEn = alternates?.en ?? (lang === 'en' ? pathname : counterpartPath(path
             </a>
           ))}
           <a href={`/${lang}/resources/`} aria-current={current === 'resources' ? 'page' : undefined}>{t.navResources}</a>
+          <a href={`/${lang}/specials/`} aria-current={current === 'specials' ? 'page' : undefined}>{t.navSpecials}</a>
+          <a href={`/${lang}/glossary/`} aria-current={current === 'glossary' ? 'page' : undefined}>{t.navGlossary}</a>
           <a href={`/${lang}/about/`} aria-current={current === 'about' ? 'page' : undefined}>{t.navAbout}</a>
           <a href={`/${lang}/search/`} aria-current={current === 'search' ? 'page' : undefined}>{t.navSearch}</a>
         </nav>

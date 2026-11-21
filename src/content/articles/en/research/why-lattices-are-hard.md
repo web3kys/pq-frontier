@@ -10,6 +10,10 @@ imageCredit: "AI-generated artwork created for PQ Frontier"
 draft: false
 featured: true
 translationKey: "why-lattices-are-hard"
+keyPoints:
+  - "Lattice cryptography rests on the shortest-vector problem and LWE in high-dimensional lattices — problems with no known quantum speedup."
+  - "Security estimates are calibrated on BKZ lattice-reduction cost models; parameter choice is an engineering balance between attack cost and performance."
+  - "The lattice route won on efficiency, versatility and two decades of cryptanalysis."
 ---
 
 ## One equation, two fates

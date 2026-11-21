@@ -10,6 +10,10 @@ imageCredit: "本站 AI 生成配图"
 draft: false
 featured: false
 translationKey: "migration-roadmap"
+keyPoints:
+  - "迁移按盘点（CBOM）→ 试点 → 切换三阶段推进，顺序不可颠倒。"
+  - "Mosca 不等式：数据保质期 + 迁移耗时 > 威胁到来时间，就已经迟到了。"
+  - "优先级由数据保质期与暴露面决定：对外 TLS 与长寿命签名先行。"
 ---
 
 ## 迁移的难处不在算法

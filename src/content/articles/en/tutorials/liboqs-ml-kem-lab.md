@@ -9,6 +9,10 @@ heroImage: "/images/tutorials/liboqs.jpg"
 imageCredit: "AI-generated artwork created for PQ Frontier"
 draft: false
 translationKey: "liboqs-ml-kem-lab"
+keyPoints:
+  - "liboqs' oqs.KEM interface runs a full ML-KEM exchange in a few lines of code."
+  - "Lab essentials: check the key and ciphertext sizes of all three parameter sets, and confirm a tampered ciphertext decapsulates to a different secret (implicit rejection)."
+  - "liboqs is a research and prototyping library; use a maintained implementation in production."
 ---
 
 ## What we are doing

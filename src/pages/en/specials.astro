@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+
+const lang = 'en' as const;
+const all = await getCollection('articles', ({ data }) => data.lang === lang && !data.draft);
+const byKey = (keys: string[]) =>
+  keys
+    .map((k) => all.find((a) => a.data.translationKey === k))
+    .filter((a): a is NonNullable<typeof a> => Boolean(a));
+
+const specials = [
+  {
+    no: 'Special 01',
+    title: 'The NIST Standards, Explained',
+    lead: 'In August 2024 NIST handed the world the first finished post-quantum standards: FIPS 203 (ML-KEM), FIPS 204 (ML-DSA) and FIPS 205 (SLH-DSA). This special reads all three together with their backstories — what problem each algorithm solves, how to choose parameters, and what standardization changed along the way. Finish it and you can judge the algorithm choices in any migration plan for yourself.',
+    keys: ['ml-kem-fips-203', 'ml-dsa-fips-204', 'slh-dsa-fips-205', 'kyber-to-mlkem'],
+  },
+  {
+    no: 'Special 02',
+    title: 'Migration Field Manual',
+    lead: 'Standards answer "with what"; this special answers "how". From building a CBOM inventory, to scheduling backwards from the global timelines, to taking PKI — the hardest subsystem — apart on its own: four articles forming one executable chain. Written to be read in order by the engineers and architects who own a migration.',
+    keys: ['migration-roadmap', 'cbom-inventory-howto', 'global-migration-timelines', 'pki-certificates-pqc'],
+  },
+  {
+    no: 'Special 03',
+    title: 'Assessing the Quantum Threat',
+    lead: '"When will a quantum computer break RSA" is not a news question; it is an estimation problem. This special decomposes the threat into trackable variables: the resources Shor\'s algorithm needs, the pace of error correction, where the five hardware routes really stand, and why symmetric cryptography only needs longer keys. After it, you can calibrate your timeline with three numbers instead of headlines.',
+    keys: ['shor-rsa-threat', 'quantum-error-correction', 'quantum-hardware-landscape', 'grover-symmetric-impact'],
+  },
+];
+
+const timeline = [
+  { yr: '2016', t: 'NIST opens the PQC standardization process', d: 'In December 2016 NIST issued its call for proposals; the world\'s cryptographers submitted 82 candidate schemes. Post-quantum migration has had official coordinates ever since.' },
+  { yr: '2022', t: 'First selections announced', d: 'In July 2022 NIST selected CRYSTALS-Kyber for key establishment and Dilithium, Falcon and SPHINCS+ for signatures; the NSA published the CNSA 2.0 timeline the same year.' },
+  { yr: '2024', t: 'FIPS 203/204/205 published', d: 'On 13 August 2024 the three federal standards landed on the same day: ML-KEM, ML-DSA, SLH-DSA. The post-quantum era stopped being future tense.' },
+  { yr: '2024', t: 'Willow demonstrates below-threshold correction', d: 'In December 2024 Google published surface-code scaling in Nature: distance 3 to 5 to 7, logical error rates falling about 2.14× per step. The threat-side clock is ticking faster than many expected.' },
+  { yr: '2025', t: 'HQC selected; global roadmaps align', d: 'In March 2025 NIST selected HQC as the backup KEM to ML-KEM; in April the EU published its coordinated roadmap and the UK NCSC its three-phase guidance. The major economies\' timelines aligned this year.' },
+  { yr: '2027', t: 'FN-DSA (FIPS 206) expected', d: 'Falcon\'s standard, FN-DSA, is expected to complete its publication process around 2026–2027 — the last standards puzzle piece for small signatures.' },
+  { yr: '2030', t: 'The shared high-priority deadline', d: 'CNSA 2.0, the EU roadmap and NIST IR 8547 converge on 2030: high-risk and high-priority systems migrated, classical public key at ≤112-bit security deprecated.' },
+  { yr: '2035', t: 'The zero line for classical public key', d: 'NIST IR 8547 disallows quantum-vulnerable algorithms from 2035; the UK and EU full-transition targets are also 2035. Treat it as the default endpoint of long-range planning.' },
+];
+---
+
+<BaseLayout lang={lang} title="Specials" description="PQ Frontier specials: the NIST standards explained, a migration field manual, a quantum threat assessment, and the post-quantum standardization timeline." current="specials">
+  <div class="wrap" style="padding-top: 2.6rem">
+    <p class="kicker">Specials</p>
+    <h1 class="page-title">Specials</h1>
+    <p class="lead">Single articles solve single points; specials connect the points into lines. Three specials for the site's three reading modes: read the standards, run a migration, assess the threat.</p>
+
+    <div class="specials-hero" style="margin-top: 2rem">
+      <video src="/videos/orbit-loop.mp4" autoplay muted loop playsinline aria-label="Quantum orbit animation: electrons circling a nucleus in a seamless loop"></video>
+      <div class="shade"></div>
+      <div class="cap">
+        <h2>First the shape of the threat, then the shape of the defence</h2>
+        <p>Electrons in orbit do not pause for us. Every special here starts by stating the problem precisely.</p>
+      </div>
+    </div>
+
+    {specials.map((sp) => (
+      <section class="special-block">
+        <p class="kicker">{sp.no}</p>
+        <h2 class="section-title">{sp.title}</h2>
+        <p class="lead" style="max-width: 46rem">{sp.lead}</p>
+        <div class="card-grid" style="margin-top: 1.4rem">
+          {byKey(sp.keys).map((a) => <ArticleCard lang={lang} entry={a} />)}
+        </div>
+      </section>
+    ))}
+
+    <section class="special-block">
+      <p class="kicker">Timeline</p>
+      <h2 class="section-title">The Post-Quantum Standardization Timeline</h2>
+      <p class="lead" style="max-width: 46rem">From a 2016 call for proposals to the 2035 zero line — with the key nodes on one line, the "why now" of migration planning explains itself.</p>
+      <div class="timeline">
+        {timeline.map((e) => (
+          <div class="timeline-item">
+            <span class="yr">{e.yr}</span>
+            <h3>{e.t}</h3>
+            <p>{e.d}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

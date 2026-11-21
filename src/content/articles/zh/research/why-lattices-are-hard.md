@@ -10,6 +10,10 @@ imageCredit: "本站 AI 生成配图"
 draft: false
 featured: true
 translationKey: "why-lattices-are-hard"
+keyPoints:
+  - "格密码的安全性建立在高维格的最短向量问题与 LWE 之上，这类问题没有已知的量子加速算法。"
+  - "安全性估算以 BKZ 格基约化的成本模型为标尺；参数选择是攻击成本与性能之间的工程平衡。"
+  - "格路线胜出的原因：效率、多样性，以及二十余年的密码分析积累。"
 ---
 
 ## 一行方程，两种命运

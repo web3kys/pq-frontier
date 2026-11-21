@@ -10,6 +10,10 @@ imageCredit: "AI-generated artwork created for PQ Frontier"
 draft: false
 featured: false
 translationKey: "migration-roadmap"
+keyPoints:
+  - "Migration runs inventory (CBOM) → pilot → switch, in that order — the sequence is not negotiable."
+  - "Mosca's inequality: if data shelf life plus migration time exceeds the time until the threat arrives, you are already late."
+  - "Priorities follow data shelf life and exposure: external TLS and long-lived signatures go first."
 ---
 
 ## The hard part is not the algorithm

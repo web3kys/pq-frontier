@@ -9,6 +9,10 @@ heroImage: "/images/quantum/shor.jpg"
 imageCredit: "本站 AI 生成配图"
 draft: false
 translationKey: "shor-rsa-threat"
+keyPoints:
+  - "Shor 算法在多项式时间内完成大整数分解与离散对数，RSA 与 ECC 在足够大的容错量子计算机面前都不安全。"
+  - "破解 RSA-2048 的资源量级：约数千个逻辑量子比特、千万级物理量子比特（表面码、物理错误率 10^-3 的假设下）。"
+  - "威胁的时间维度由量子纠错进展决定；'先存后破'使长保质期数据今天就已处于风险之中。"
 ---
 
 ## 现行公钥密码的两块基石

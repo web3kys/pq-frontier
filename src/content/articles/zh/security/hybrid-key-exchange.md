@@ -10,6 +10,10 @@ imageCredit: "本站 AI 生成配图"
 draft: false
 featured: false
 translationKey: "hybrid-key-exchange"
+keyPoints:
+  - "混合密钥交换把经典 X25519 与 ML-KEM-768 的共享秘密组合进同一个 TLS 1.3 握手——两边任意一边安全，整体就安全。"
+  - "它不需要更换证书，Chrome 与主流 CDN 已默认开启，是今天就能落地的第一步。"
+  - "它直接封堵'先存后破'：今天录下的握手流量，在量子时代同样解不开。"
 ---
 
 ## 先存后破：迁移的紧迫性从哪来

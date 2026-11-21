@@ -10,6 +10,10 @@ imageCredit: "本站 AI 生成配图"
 draft: false
 featured: true
 translationKey: "ml-kem-fips-203"
+keyPoints:
+  - "ML-KEM 是 FIPS 203 规定的格基密钥封装机制，源自 CRYSTALS-Kyber，是后量子密钥交换的默认选择。"
+  - "三档参数 ML-KEM-512/768/1024 对应约 1/3/5 级安全；公钥 800–1568 字节，密文 768–1568 字节。"
+  - "解封装采用隐式拒绝抵御选择密文攻击；工程上优先与 X25519 组成混合密钥交换部署。"
 ---
 
 ## 为什么先从密钥封装开始

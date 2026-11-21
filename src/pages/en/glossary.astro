@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const lang = 'en' as const;
+const terms = [
+  ['Post-Quantum Cryptography', 'PQC', 'Cryptography that runs on classical computers but resists attacks by quantum computers. The standard clarification: PQC is not "cryptography run on a quantum computer" — it is the defence prepared for ordinary machines.'],
+  ['Key Encapsulation Mechanism', 'KEM', 'The post-quantum shape of "key exchange": the encapsulator uses a public key to produce a shared secret plus a ciphertext; the decapsulator recovers the same secret with the private key. ML-KEM is the standard example.'],
+  ['ML-KEM', 'Module-Lattice KEM (FIPS 203)', 'NIST\u2019s lattice-based key-encapsulation standard (2024), derived from CRYSTALS-Kyber. Three parameter sets (512/768/1024); the default PQC component of hybrid TLS key exchange.'],
+  ['ML-DSA', 'Module-Lattice Digital Signature (FIPS 204)', 'NIST\u2019s primary post-quantum signature standard, derived from CRYSTALS-Dilithium. Three parameter sets (44/65/87); signatures of 2.4–4.6 KB.'],
+  ['SLH-DSA', 'Stateless Hash-Based DSA (FIPS 205)', 'The signature standard that trusts only hash functions, derived from SPHINCS+. The most conservative assumptions and the largest signatures (7.8–49.9 KB); built for offline roots and firmware.'],
+  ['FN-DSA', 'FFT-based NTRU DSA (FIPS 206, in draft)', 'Falcon\u2019s standard name. The smallest signatures (~666 bytes) and the hardest implementation (double-precision Gaussian sampling); not yet published as a final standard.'],
+  ['Lattice Cryptography', 'Lattice-Based Cryptography', 'Cryptography whose security rests on high-dimensional lattice problems (shortest vector, LWE). Efficient and versatile — up to homomorphic encryption — and the biggest winner of the PQC standardization.'],
+  ['LWE', 'Learning With Errors', 'Recovering a secret from linear equations perturbed by small noise. Introduced by Regev in 2005; its quantum reduction is a root of lattice cryptography\u2019s security. Module-LWE is the structured, ring-based variant.'],
+  ['Shor\u2019s Algorithm', 'Shor\u2019s Algorithm', 'The 1994 quantum algorithm that factors integers and solves discrete logarithms in polynomial time — the common terminator of RSA, DH and ECC, given a large enough fault-tolerant quantum computer.'],
+  ['Grover\u2019s Algorithm', 'Grover\u2019s Algorithm', 'Quantum search with a quadratic speedup for unstructured problems. The symmetric-cryptography answer is longer keys: AES-256 retains roughly 128-bit strength in the quantum era.'],
+  ['Quantum Error Correction', 'QEC', 'Encoding one logical qubit into many physical qubits and using syndrome measurements to locate and correct errors. The core variable in every quantum-threat timeline.'],
+  ['Logical Qubit', 'Logical Qubit', 'An error-corrected, "usable" qubit. Its exchange rate against physical qubits (currently on the order of a thousand to one) decides a quantum computer\u2019s real size.'],
+  ['Surface Code', 'Surface Code', 'The leading quantum error-correcting code: a 2D grid, nearest-neighbour interactions, and a forgiving ~1% threshold. The code behind Google Willow\u2019s below-threshold demonstration.'],
+  ['Fault-Tolerant Quantum Computing', 'FTQC', 'Quantum computation protected by error correction well enough to run arbitrarily long algorithms. Any machine that runs Shor\u2019s algorithm is FTQC — a different species from today\u2019s noisy NISQ devices.'],
+  ['Hybrid Key Exchange', 'Hybrid Key Exchange', 'Combining a classical and a PQC algorithm in one protocol handshake (e.g. X25519+ML-KEM-768), secure if either component is. The standard way post-quantum TLS is deployed today.'],
+  ['Harvest Now, Decrypt Later', 'HNDL', 'Recording encrypted traffic today and decrypting it once a quantum computer matures. Its urgency is set by the shelf life of the data being recorded.'],
+  ['Mosca\u2019s Inequality', 'Mosca\u2019s Inequality', 'The urgency test: if data shelf life (X) plus migration time (Y) exceeds the time until the quantum threat arrives (Z), you are already late. It turns "should we migrate" into arithmetic.'],
+  ['CBOM', 'Cryptography Bill of Materials', 'An inventory, in CycloneDX format, of every algorithm, protocol, certificate and key in an organization — where it lives and what it protects. The first deliverable of any migration.'],
+  ['Crypto-Agility', 'Crypto-Agility', 'The ability to swap cryptographic algorithms without re-architecting a system: configurable algorithms, abstracted interfaces, automated certificates. Migration\u2019s endgame is not switching once, but always being able to switch.'],
+  ['CNSA 2.0', 'Commercial National Security Algorithm Suite 2.0', 'The NSA\u2019s algorithm suite and migration timeline for US national security systems and their suppliers — currently the hardest-edged post-quantum schedule in force.'],
+  ['Implicit Rejection', 'Implicit Rejection', 'When KEM decapsulation fails, return a fake shared secret derived from the private key instead of an error. The attacker learns nothing from success or failure — a key step in the FO transform\u2019s security.'],
+  ['Rejection Sampling', 'Rejection Sampling', 'Discarding and resampling any sample whose distribution would leak the secret, until the output is statistically independent of it. The core mechanism of ML-DSA\u2019s Fiat–Shamir-with-aborts signing.'],
+  ['Hash-Based Signature', 'Hash-Based Signature', 'Signatures built from hash functions alone (Lamport, XMSS, SLH-DSA). The single most conservative assumption in signature cryptography, paid for in size or in state management.'],
+  ['Q-Day', 'Q-Day', 'The hypothetical day a quantum computer first breaks real-world public-key cryptography. Nobody knows the date — the entire point of migration is not betting that it never comes.'],
+];
+---
+
+<BaseLayout lang={lang} title="Glossary" description="Plain-language definitions of the core post-quantum terms used across PQ Frontier: from ML-KEM and surface codes to Mosca's inequality and harvest-now-decrypt-later." current="glossary">
+  <div class="wrap" style="padding-top: 2.6rem">
+    <p class="kicker">Glossary</p>
+    <h1 class="page-title">Glossary</h1>
+    <p class="lead">The {terms.length} core terms this site uses throughout, defined in one place. Each entry gives a one-sentence definition and its place in the migration picture; the articles carry the depth.</p>
+    <dl class="glossary-list" style="margin-top: 1.8rem">
+      {terms.map(([name, abbr, def]) => (
+        <div class="glossary-item">
+          <dt>{name}<span class="en">{abbr}</span></dt>
+          <dd>{def}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</BaseLayout>

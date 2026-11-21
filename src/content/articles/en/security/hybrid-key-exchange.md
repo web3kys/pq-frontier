@@ -10,6 +10,10 @@ imageCredit: "AI-generated artwork created for PQ Frontier"
 draft: false
 featured: false
 translationKey: "hybrid-key-exchange"
+keyPoints:
+  - "Hybrid key exchange combines the shared secrets of classical X25519 and ML-KEM-768 in one TLS 1.3 handshake — the combination is safe if either component is."
+  - "It needs no certificate changes, is already on by default in Chrome and major CDNs, and is the first step deployable today."
+  - "It directly closes harvest-now-decrypt-later: handshakes recorded today stay sealed in the quantum era."
 ---
 
 ## Harvest now, decrypt later: where the urgency comes from

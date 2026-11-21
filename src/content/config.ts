@@ -34,6 +34,7 @@ const articles = defineCollection({
     heroImage: z.string().optional(),
     imageCredit: z.string().optional(),
     translationKey: z.string().optional(),
+    keyPoints: z.array(z.string()).optional(),
     author: z.string().default('PQ Frontier'),
   }),
 });

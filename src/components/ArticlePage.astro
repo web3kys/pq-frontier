@@ -18,6 +18,10 @@ const minutes = Math.max(1, Math.round(chars / (lang === 'zh' ? 450 : 1100)));
 const sectionName = lang === 'zh' ? sectionBySlug(d.section).zh : sectionBySlug(d.section).en;
 const slug = entry.id.split('/').pop();
 const selfPath = `/${lang}/${d.section}/${slug}/`;
+const absUrl = new URL(selfPath, Astro.site ?? 'https://pq-frontier.vercel.app').href;
+const citeText = lang === 'zh'
+  ? `PQ Frontier. 《${d.title}》. 后量子前沿, ${d.pubDate.getFullYear()}. ${absUrl}`
+  : `PQ Frontier. "${d.title}." Post-Quantum Frontier, ${d.pubDate.getFullYear()}. ${absUrl}`;
 
 // hreflang pairing: only link the other language if a real translation
 // with the same translationKey exists. Never fake a missing translation.
@@ -97,6 +101,17 @@ const jsonLd = {
       </div>
     )}
 
+    {d.keyPoints && d.keyPoints.length > 0 && (
+      <div class="wrap">
+        <aside class="keypoints">
+          <h2>{t.keyPointsTitle}</h2>
+          <ul>
+            {d.keyPoints.map((k) => <li>{k}</li>)}
+          </ul>
+        </aside>
+      </div>
+    )}
+
     <div class="wrap prose">
       <Content />
       {d.tags.length > 0 && (
@@ -105,6 +120,10 @@ const jsonLd = {
           {d.tags.map((tag) => <span class="tag">{tag}</span>)}
         </p>
       )}
+      <aside class="citebox">
+        <h2>{t.citeTitle}</h2>
+        <p>{citeText}</p>
+      </aside>
     </div>
   </article>
 

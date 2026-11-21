@@ -10,6 +10,10 @@ imageCredit: "AI-generated artwork created for PQ Frontier"
 draft: false
 featured: true
 translationKey: "ml-kem-fips-203"
+keyPoints:
+  - "ML-KEM is the lattice-based key-encapsulation mechanism of FIPS 203, derived from CRYSTALS-Kyber — the default choice for post-quantum key exchange."
+  - "The three parameter sets (512/768/1024) target roughly categories 1/3/5; public keys run 800–1568 bytes, ciphertexts 768–1568 bytes."
+  - "Decapsulation uses implicit rejection against chosen-ciphertext attacks; in practice it is deployed first as hybrid key exchange with X25519."
 ---
 
 ## Why key encapsulation comes first

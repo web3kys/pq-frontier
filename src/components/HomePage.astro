@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ArticleCard from './ArticleCard.astro';
 import { SECTIONS, sectionBySlug, ui, type Lang } from '../lib/i18n';
 
 interface Props { lang: Lang }
@@ -182,6 +181,32 @@ const stats =
     ) : (
       <p class="empty-note">{t.emptyLatest}</p>
     )}
+  </section>
+
+  <section class="block wrap reveal">
+    <div class="sec-head">
+      <span class="sec-no">04</span>
+      <h2>{lang === 'zh' ? '专题与工具' : 'Specials & Reference'}</h2>
+      <span class="sec-rule" aria-hidden="true"></span>
+    </div>
+    <div class="ed-list">
+      <a class="ed-row" href={`/${lang}/specials/`}>
+        <span class="ed-date">{lang === 'zh' ? '专题' : 'Specials'}</span>
+        <span class="ed-main">
+          <span class="ed-title">{lang === 'zh' ? 'NIST 标准全解 · 迁移实战手册 · 量子威胁评估' : 'The NIST Standards · Migration Field Manual · Threat Assessment'}</span>
+          <span class="ed-desc">{lang === 'zh' ? '三个专题把 12 篇文章连成三条阅读线，附后量子标准化时间线（2016 → 2035）。' : 'Three specials connect twelve articles into three reading paths, plus the standardization timeline (2016 → 2035).'}</span>
+        </span>
+        <span class="ed-side"><span class="ed-arrow" aria-hidden="true">→</span></span>
+      </a>
+      <a class="ed-row" href={`/${lang}/glossary/`}>
+        <span class="ed-date">{lang === 'zh' ? '术语表' : 'Glossary'}</span>
+        <span class="ed-main">
+          <span class="ed-title">{lang === 'zh' ? '24 个核心术语，一处查清' : '24 core terms, defined in one place'}</span>
+          <span class="ed-desc">{lang === 'zh' ? '从 ML-KEM、表面码到 Mosca 不等式与先存后破——每个术语一句话定义加迁移语境。' : 'From ML-KEM and surface codes to Mosca’s inequality and harvest-now-decrypt-later — one-line definitions with migration context.'}</span>
+        </span>
+        <span class="ed-side"><span class="ed-arrow" aria-hidden="true">→</span></span>
+      </a>
+    </div>
   </section>
 
   <script>

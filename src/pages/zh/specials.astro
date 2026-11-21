@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+
+const lang = 'zh' as const;
+const all = await getCollection('articles', ({ data }) => data.lang === lang && !data.draft);
+const byKey = (keys: string[]) =>
+  keys
+    .map((k) => all.find((a) => a.data.translationKey === k))
+    .filter((a): a is NonNullable<typeof a> => Boolean(a));
+
+const specials = [
+  {
+    no: '专题一',
+    title: 'NIST 标准全解',
+    lead: '2024 年 8 月，NIST 把后量子时代的第一批正式标准交到世界手里：FIPS 203（ML-KEM）、FIPS 204（ML-DSA）、FIPS 205（SLH-DSA）。这个专题把三部标准连同它们的来历一起读完——每个算法解决什么问题、参数怎么选、标准化过程中改了什么。读完这个专题，你对任何一份迁移方案里的算法选型都有自己的判断。',
+    keys: ['ml-kem-fips-203', 'ml-dsa-fips-204', 'slh-dsa-fips-205', 'kyber-to-mlkem'],
+  },
+  {
+    no: '专题二',
+    title: '迁移实战手册',
+    lead: '标准回答"用什么"，这个专题回答"怎么换"。从 CBOM 盘点摸清家底，到照着全球时间表倒排工期，再到 PKI 这个最复杂的子系统单独拆解——四篇文章构成一条完整的实操链。适合正在或即将负责迁移项目的工程师与架构师按顺序读。',
+    keys: ['migration-roadmap', 'cbom-inventory-howto', 'global-migration-timelines', 'pki-certificates-pqc'],
+  },
+  {
+    no: '专题三',
+    title: '量子威胁评估',
+    lead: '"量子计算机什么时候能破 RSA"不是一个新闻问题，而是一个估算问题。这个专题把威胁拆成可跟踪的变量：Shor 算法需要的资源、纠错的进展速度、硬件五条路线的真实位置，以及对称密码为什么只需要加倍密钥。读完之后，你可以用三个数字而不是头条新闻来校准自己的时间表。',
+    keys: ['shor-rsa-threat', 'quantum-error-correction', 'quantum-hardware-landscape', 'grover-symmetric-impact'],
+  },
+];
+
+const timeline = [
+  { yr: '2016', t: 'NIST 启动后量子密码标准化', d: '2016 年 12 月，NIST 发出征集令，全球密码学界提交了 82 个候选方案——后量子迁移从这一年开始有了官方坐标。' },
+  { yr: '2022', t: '首批入选算法公布', d: '2022 年 7 月，NIST 宣布 CRYSTALS-Kyber 为密钥封装标准，Dilithium、Falcon、SPHINCS+ 为签名标准；同年 NSA 发布 CNSA 2.0 时间表。' },
+  { yr: '2024', t: 'FIPS 203/204/205 正式发布', d: '2024 年 8 月 13 日，三部联邦标准同日落地：ML-KEM、ML-DSA、SLH-DSA。后量子时代从"将来"变成"现在"。' },
+  { yr: '2024', t: 'Willow 演示阈值以下纠错', d: '2024 年 12 月，Google 在 Nature 发表表面码扩展实验：码距 3→5→7，逻辑错误率每步下降约 2.14 倍。威胁一侧的时钟走得比许多人预期的更快。' },
+  { yr: '2025', t: 'HQC 入选与全球路线图', d: '2025 年 3 月，NIST 选定 HQC 为 ML-KEM 的备份 KEM；4 月欧盟发布协同迁移路线图，英国 NCSC 发布三阶段指南。主流经济体的时间表在这一年基本对齐。' },
+  { yr: '2027', t: 'FN-DSA（FIPS 206）预期', d: 'Falcon 的标准 FN-DSA 预计在 2026–2027 年间走完发布流程，补上小签名尺寸的最后一块标准拼图。' },
+  { yr: '2030', t: '高优先级迁移的共同节点', d: 'CNSA 2.0、欧盟路线图、NIST IR 8547 在 2030 年交汇：高风险与高优先级系统完成迁移，≤112 位安全强度的传统公钥被弃用。' },
+  { yr: '2035', t: '传统公钥的清零线', d: 'NIST IR 8547 自 2035 年起禁止量子脆弱算法；英国与欧盟的全面过渡目标同为 2035 年。这一年是长期规划的默认终点。' },
+];
+---
+
+<BaseLayout lang={lang} title="专题" description="后量子前沿的专题策划：NIST 标准全解、迁移实战手册、量子威胁评估，以及后量子标准时间线。" current="specials">
+  <div class="wrap" style="padding-top: 2.6rem">
+    <p class="kicker">Specials · 专题</p>
+    <h1 class="page-title">专题</h1>
+    <p class="lead">单篇文章解决单点问题，专题把问题连成线。三个专题分别对应读标准、做迁移、评威胁——本站内容的三种读法。</p>
+
+    <div class="specials-hero" style="margin-top: 2rem">
+      <video src="/videos/orbit-loop.mp4" autoplay muted loop playsinline aria-label="量子轨道动画：电子绕核运行的无缝循环"></video>
+      <div class="shade"></div>
+      <div class="cap">
+        <h2>先有威胁的形状，才有防御的形状</h2>
+        <p>轨道上的电子不会停下来等我们。本站的每个专题，都从"把问题讲准"开始。</p>
+      </div>
+    </div>
+
+    {specials.map((sp) => (
+      <section class="special-block">
+        <p class="kicker">{sp.no}</p>
+        <h2 class="section-title">{sp.title}</h2>
+        <p class="lead" style="max-width: 46rem">{sp.lead}</p>
+        <div class="card-grid" style="margin-top: 1.4rem">
+          {byKey(sp.keys).map((a) => <ArticleCard lang={lang} entry={a} />)}
+        </div>
+      </section>
+    ))}
+
+    <section class="special-block">
+      <p class="kicker">时间线</p>
+      <h2 class="section-title">后量子标准化时间线</h2>
+      <p class="lead" style="max-width: 46rem">从 2016 年的一纸征集令，到 2035 年的清零线——把关键节点放在一条线上，迁移规划的"为什么是现在"就一目了然。</p>
+      <div class="timeline">
+        {timeline.map((e) => (
+          <div class="timeline-item">
+            <span class="yr">{e.yr}</span>
+            <h3>{e.t}</h3>
+            <p>{e.d}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

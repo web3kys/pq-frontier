@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const lang = 'zh' as const;
+const terms = [
+  ['后量子密码学', 'Post-Quantum Cryptography (PQC)', '在经典计算机上运行、但能抵抗量子计算机攻击的密码学总称。核心误解澄清：PQC 不是"用量子计算机跑的密码"，恰恰相反，它是为普通计算机准备的防御。'],
+  ['密钥封装机制', 'Key Encapsulation Mechanism (KEM)', '后量子时代的"密钥交换"形态：封装方用对方公钥生成一个共享秘密与一段密文，解封方用私钥从密文中恢复同一个秘密。ML-KEM 是其标准代表。'],
+  ['ML-KEM', 'Module-Lattice KEM (FIPS 203)', 'NIST 于 2024 年发布的格基密钥封装标准，源自 CRYSTALS-Kyber。三档参数 512/768/1024，是 TLS 混合密钥交换的默认 PQC 成分。'],
+  ['ML-DSA', 'Module-Lattice Digital Signature (FIPS 204)', 'NIST 的主力后量子数字签名标准，源自 CRYSTALS-Dilithium。三档参数 44/65/87，签名 2.4–4.6 KB。'],
+  ['SLH-DSA', 'Stateless Hash-Based DSA (FIPS 205)', '只依赖哈希函数的无状态签名标准，源自 SPHINCS+。假设最保守，签名最大（7.8–49.9 KB），适合离线根密钥与固件签名。'],
+  ['FN-DSA', 'FFT-based NTRU DSA (FIPS 206, 草案中)', 'Falcon 的标准名。签名最小（约 666 字节）但实现最难（需要双精度浮点高斯采样），标准尚未正式发布。'],
+  ['格密码', 'Lattice Cryptography', '安全性建立在高维格难题（最短向量问题、LWE）上的密码学路线。效率高、功能多（可做同态加密），是 PQC 标准化的最大赢家。'],
+  ['LWE', 'Learning With Errors', '带误差学习问题：在带小噪声的线性方程中恢复秘密。Regev 于 2005 年提出，其量子归约证明是格密码安全性的根基之一；Module-LWE 是它在多项式环上的结构化版本。'],
+  ['Shor 算法', 'Shor\u2019s Algorithm', '1994 年提出的量子算法，多项式时间内分解大整数并求解离散对数——RSA、DH、ECC 的共同终结者，前提是足够大的容错量子计算机。'],
+  ['Grover 算法', 'Grover\u2019s Algorithm', '量子搜索算法，给无结构搜索平方级加速。对称密码的应对是把密钥长度加倍：AES-256 在量子时代仍保有约 128 位强度。'],
+  ['量子纠错', 'Quantum Error Correction (QEC)', '把一个逻辑量子比特编码进许多物理量子比特、用综合征测量定位并修正错误的技术。是判断量子威胁时间线的核心变量。'],
+  ['逻辑量子比特', 'Logical Qubit', '经纠错保护后的"好用"量子比特。与物理量子比特的兑换率（当前约上千比一）决定了量子计算机的真实规模。'],
+  ['表面码', 'Surface Code', '当前主流的量子纠错码：二维网格、近邻相互作用、约 1% 的高容错阈值。Google Willow 的阈值以下演示用的就是它。'],
+  ['容错量子计算', 'Fault-Tolerant Quantum Computing (FTQC)', '能在纠错保护下运行任意长算法的量子计算形态。能运行 Shor 算法的机器必然是 FTQC——它与今天的 NISQ（含噪声中等规模）设备是两个物种。'],
+  ['混合密钥交换', 'Hybrid Key Exchange', '在同一协议握手里组合经典算法与 PQC 算法（如 X25519+ML-KEM-768），任一成分安全则整体安全。是当前部署后量子 TLS 的标准做法。'],
+  ['先存后破', 'Harvest Now, Decrypt Later (HNDL)', '攻击者今天录下加密流量、存起来，等量子计算机成熟后再解密。对策的紧迫性由数据的保质期决定。'],
+  ['Mosca 不等式', 'Mosca\u2019s Inequality', '迁移紧迫性判据：数据保质期（X）+ 迁移耗时（Y）> 量子威胁到来时间（Z），则已经迟到。它把"要不要迁"变成一道算术题。'],
+  ['CBOM', 'Cryptography Bill of Materials', '密码物料清单：基于 CycloneDX 格式，逐项记录组织内算法、协议、证书、密钥的位置与用途。迁移的第一步交付物。'],
+  ['密码敏捷', 'Crypto-Agility', '系统在不改架构的前提下更换密码算法的能力。配置化算法、抽象接口与自动化证书都是它的组成部分——迁移的终局不是换一次，而是永远能换。'],
+  ['CNSA 2.0', 'Commercial National Security Algorithm Suite 2.0', 'NSA 发布的算法套件与迁移时间表，约束美国国家安全系统及其供应商，是目前最硬的一张后量子时间表。'],
+  ['隐式拒绝', 'Implicit Rejection', 'KEM 解封装失败时不报错，而是返回一个由私钥派生的"假"共享秘密。攻击者无法从成败中获得信息，FO 变换安全性的关键一环。'],
+  ['拒绝采样', 'Rejection Sampling', '生成样本时丢弃会泄露秘密的样本、重新采样，直到输出分布与秘密无关。ML-DSA 的 Fiat–Shamir with Aborts 签名核心机制。'],
+  ['哈希签名', 'Hash-Based Signature', '只用哈希函数构造的签名（Lamport、XMSS、SLH-DSA）。安全性假设最单一保守，代价是签名体积或状态管理。'],
+  ['Q 日', 'Q-Day', '量子计算机首次具备破解现实公钥密码能力的假想日期。没人知道它是哪天——迁移的全部意义就是不赌这一天不来。'],
+];
+---
+
+<BaseLayout lang={lang} title="术语表" description="后量子密码学核心术语的简明释义：从 ML-KEM、表面码到 Mosca 不等式与先存后破，中英对照。" current="glossary">
+  <div class="wrap" style="padding-top: 2.6rem">
+    <p class="kicker">Glossary · 术语表</p>
+    <h1 class="page-title">术语表</h1>
+    <p class="lead">本站反复使用的 {terms.length} 个核心术语，一处查清。每条给出一句话定义与它在迁移语境中的位置；深入讨论见对应文章。</p>
+    <dl class="glossary-list" style="margin-top: 1.8rem">
+      {terms.map(([zh, en, def]) => (
+        <div class="glossary-item">
+          <dt>{zh}<span class="en">{en}</span></dt>
+          <dd>{def}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</BaseLayout>
